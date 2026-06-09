@@ -22,6 +22,7 @@ let currentFilterValue = null;
 
 let chartProcedenciaInstance = null;
 let chartEdadInstance = null;
+let chartComparisonInstance = null;
 
 /******************************************************************
  * CONSTANTES
@@ -51,6 +52,30 @@ const CATEGORIAS_VISITANTE = [
   "Estudiante",
   "Investigador",
   "Otro",
+];
+
+const VARIABLE_MAP = {
+  edad: {
+    label: "Rango de Edad",
+    categories: CATEGORIAS_EDAD,
+  },
+  procedencia: {
+    label: "Procedencia",
+    categories: CATEGORIAS_PROCEDENCIA,
+  },
+  tipoVisitante: {
+    label: "Tipo de Visitante",
+    categories: CATEGORIAS_VISITANTE,
+  },
+};
+
+const COMPARISON_COLORS = [
+  "#8B5E34",
+  "#BF8754",
+  "#D4A373",
+  "#E6C79C",
+  "#F3E6D0",
+  "#C9943A",
 ];
 
 /******************************************************************
@@ -130,6 +155,7 @@ function processAndRender() {
 
   renderKPIs(filteredData);
   renderCharts(filteredData);
+  renderComparisonChart(filteredData);
   renderTables(filteredData);
   renderHistoryTable(filteredData);
 }
@@ -344,6 +370,100 @@ function renderCharts(data) {
               font: {
                 family: "DM Sans",
               },
+            },
+          },
+        },
+      },
+    },
+  );
+}
+
+/******************************************************************
+ * COMPARACIÓN DE VARIABLES
+ ******************************************************************/
+
+window.onCompareChange = function () {
+  renderComparisonChart(rawDataGlobal);
+};
+
+function renderComparisonChart(data) {
+  const xField = document.getElementById("compare-x").value;
+  const yField = document.getElementById("compare-y").value;
+
+  const xMeta = VARIABLE_MAP[xField];
+  const yMeta = VARIABLE_MAP[yField];
+  const counts = {};
+
+  xMeta.categories.forEach((xValue) => {
+    counts[xValue] = {};
+    yMeta.categories.forEach((yValue) => {
+      counts[xValue][yValue] = 0;
+    });
+  });
+
+  let filtered = [...data];
+
+  if (currentFilterField && currentFilterValue) {
+    filtered = filtered.filter(
+      (item) => item[currentFilterField] === currentFilterValue,
+    );
+  }
+
+  filtered.forEach((item) => {
+    const xValue = item[xField];
+    const yValue = item[yField];
+
+    if (counts[xValue] && counts[xValue][yValue] !== undefined) {
+      counts[xValue][yValue]++;
+    }
+  });
+
+  const datasets = yMeta.categories.map((yValue, index) => ({
+    label: yValue,
+    data: xMeta.categories.map((xValue) => counts[xValue][yValue]),
+    backgroundColor: COMPARISON_COLORS[index % COMPARISON_COLORS.length],
+    borderRadius: 4,
+  }));
+
+  if (chartComparisonInstance) {
+    chartComparisonInstance.destroy();
+  }
+
+  chartComparisonInstance = new Chart(
+    document.getElementById("chart-comparison").getContext("2d"),
+    {
+      type: "bar",
+      data: {
+        labels: xMeta.categories,
+        datasets,
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            position: "bottom",
+            labels: {
+              boxWidth: 12,
+            },
+          },
+          title: {
+            display: true,
+            text: `${xMeta.label} vs ${yMeta.label}`,
+            font: {
+              family: "Playfair Display",
+              size: 16,
+            },
+          },
+        },
+        scales: {
+          x: {
+            stacked: false,
+          },
+          y: {
+            beginAtZero: true,
+            ticks: {
+              precision: 0,
             },
           },
         },

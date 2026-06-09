@@ -102,6 +102,34 @@
 
                 <div class="card">
                     <div class="card-header">
+                        <h3>Comparación de Variables</h3>
+                        <p>Selecciona dos variables para comparar sus relaciones cruzadas.</p>
+                    </div>
+                    <div class="compare-controls">
+                        <label>
+                            Variable X
+                            <select id="compare-x" onchange="onCompareChange()">
+                                <option value="edad">Rango de Edad</option>
+                                <option value="procedencia">Procedencia</option>
+                                <option value="tipoVisitante">Tipo de Visitante</option>
+                            </select>
+                        </label>
+                        <label>
+                            Variable Y
+                            <select id="compare-y" onchange="onCompareChange()">
+                                <option value="procedencia">Procedencia</option>
+                                <option value="edad">Rango de Edad</option>
+                                <option value="tipoVisitante">Tipo de Visitante</option>
+                            </select>
+                        </label>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="chart-comparison"></canvas>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
                         <h3>Matrices de Frecuencia Unidimensionales</h3>
                         <p>Haz clic sobre cualquier variable para desplegar su tabla analítica y aislar sus condiciones</p>
                     </div>
