@@ -16,6 +16,7 @@ import {
  ******************************************************************/
 
 let rawDataGlobal = [];
+let isInitialSnapshot = true;
 
 let currentFilterField = null;
 let currentFilterValue = null;
@@ -88,6 +89,16 @@ function initFirestoreListener() {
   const q = query(consultasRef, where("monumentoId", "==", MONUMENTO_ID));
 
   onSnapshot(q, (snapshot) => {
+    if (!isInitialSnapshot) {
+      const addedDocs = snapshot.docChanges().filter((change) => change.type === "added");
+      if (addedDocs.length > 0) {
+        const text = addedDocs.length === 1
+          ? "Se agregó un nuevo registro."
+          : `${addedDocs.length} registros nuevos agregados.`;
+        showToast("Registro actualizado", text);
+      }
+    }
+
     rawDataGlobal = snapshot.docs.map((doc) => {
       const data = doc.data();
 
@@ -101,6 +112,43 @@ function initFirestoreListener() {
     });
 
     processAndRender();
+    isInitialSnapshot = false;
+  });
+}
+
+function showToast(title, message) {
+  const container = document.getElementById("toast-container");
+  if (!container) return;
+
+  const toast = document.createElement("div");
+  toast.className = "toast";
+  toast.innerHTML = `
+    <div>
+      <strong>${title}</strong>
+      <small>${message}</small>
+    </div>
+    <button class="toast-close" aria-label="Cerrar notificación">×</button>
+  `;
+
+  const closeBtn = toast.querySelector(".toast-close");
+  closeBtn.addEventListener("click", () => dismissToast(toast));
+
+  container.appendChild(toast);
+
+  const timeoutId = setTimeout(() => dismissToast(toast), 4500);
+  toast.dataset.timeoutId = timeoutId;
+}
+
+function dismissToast(toast) {
+  if (!toast) return;
+  const timeoutId = toast.dataset.timeoutId;
+  if (timeoutId) {
+    clearTimeout(Number(timeoutId));
+  }
+
+  toast.style.animation = "toast-out 0.28s ease forwards";
+  toast.addEventListener("animationend", () => {
+    toast.remove();
   });
 }
 

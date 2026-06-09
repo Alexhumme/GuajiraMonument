@@ -1,0 +1,15 @@
+{
+  "projects": {
+    "default": "guajiramonuments"
+  },
+  "targets": {
+    "guajiramonuments": {
+      "hosting": {
+        "dashboard": [
+          "guajiramonuments-dashboard-73504"
+        ]
+      }
+    }
+  },
+  "etags": {}
+}
