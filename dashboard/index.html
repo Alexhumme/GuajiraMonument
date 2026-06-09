@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analítica BI – Monumento Francisco El Hombre</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="shortcut icon" href="favicon.svg" type="image/svg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+<body>
+
+    <aside class="sidebar">
+        <div class="brand-wrapper">
+            <div class="brand">
+                <h1>Uniguajira BI</h1>
+            </div>
+            <nav>
+                <ul class="nav-list">
+                    <li>
+                        <button class="nav-link active" onclick="showPanel('analytics', this)">
+                            Panel Analítico
+                        </button>
+                    </li>
+                    <li>
+                        <button class="nav-link" onclick="showPanel('history', this)">
+                            Datos Históricos
+                        </button>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+        <div class="sidebar-footer">
+            <p>Estadística I</p>
+            <p>Proyecto QR Turístico</p>
+            <p style="color: var(--gold); margin-top: 0.25rem;">U. de La Guajira</p>
+        </div>
+    </aside>
+
+    <main class="main-content">
+        <header class="top-bar">
+            <div>
+                <h2>Francisco El Hombre</h2>
+                <p>Monitoreo y Caracterización Estadística de Visitantes</p>
+            </div>
+            <div style="display: flex; gap: 1rem; align-items: center;">
+                <div id="active-filter-tag" class="active-filter-indicator">
+                    <span>Filtro activo: <strong id="filter-current-value">Ninguno</strong></span>
+                    <button class="clear-filter-btn" onclick="clearCurrentFilter()">✕</button>
+                </div>
+                <div class="badge">
+                    Monumento Activo
+                </div>
+            </div>
+        </header>
+
+        <div class="content-body">
+            
+            <div id="panel-analytics" class="panel active">
+                <div class="kpi-grid">
+                    <div class="kpi-card">
+                        <span class="kpi-label">Muestra Analizada (N)</span>
+                        <div id="kpi-n" class="kpi-value">0</div>
+                    </div>
+                    <div class="kpi-card">
+                        <span class="kpi-label">Moda: Rango de Edad</span>
+                        <div id="kpi-moda-edad" class="kpi-value">—</div>
+                    </div>
+                    <div class="kpi-card">
+                        <span class="kpi-label">Moda: Procedencia</span>
+                        <div id="kpi-moda-procedencia" class="kpi-value">—</div>
+                    </div>
+                    <div class="kpi-card">
+                        <span class="kpi-label">Moda: Tipo de Visitante</span>
+                        <div id="kpi-moda-visitante" class="kpi-value">—</div>
+                    </div>
+                </div>
+
+                <div class="charts-grid">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Distribución de Frecuencias por Procedencia</h3>
+                            <p>Análisis en tiempo real de los flujos de origen</p>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="chart-procedencia"></canvas>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Composición Etaria</h3>
+                            <p>Participación relativa de los rangos de edad</p>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="chart-edad"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Matrices de Frecuencia Unidimensionales</h3>
+                        <p>Haz clic sobre cualquier variable para desplegar su tabla analítica y aislar sus condiciones</p>
+                    </div>
+
+                    <details class="variable-group" open>
+                        <summary class="variable-summary">
+                            <span>Variable: Rango de Edad</span>
+                            <small style="font-size: 0.8rem; color: var(--gold);">▼ Clic para expandir</small>
+                        </summary>
+                        <div class="table-wrapper">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Clase ($X_i$)</th>
+                                        <th>Frec. Absoluta ($f_i$)</th>
+                                        <th>Frec. Relativa ($h_i$)</th>
+                                        <th>Frec. Porcentual ($\%$)</th>
+                                        <th>Acción de Cruce</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tbody-frec-edad"></tbody>
+                            </table>
+                        </div>
+                    </details>
+
+                    <details class="variable-group">
+                        <summary class="variable-summary">
+                            <span>Variable: Procedencia</span>
+                            <small style="font-size: 0.8rem; color: var(--gold);">▼ Clic para expandir</small>
+                        </summary>
+                        <div class="table-wrapper">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Clase ($X_i$)</th>
+                                        <th>Frec. Absoluta ($f_i$)</th>
+                                        <th>Frec. Relativa ($h_i$)</th>
+                                        <th>Frec. Porcentual ($\%$)</th>
+                                        <th>Acción de Cruce</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tbody-frec-procedencia"></tbody>
+                            </table>
+                        </div>
+                    </details>
+
+                    <details class="variable-group">
+                        <summary class="variable-summary">
+                            <span>Variable: Tipo de Visitante</span>
+                            <small style="font-size: 0.8rem; color: var(--gold);">▼ Clic para expandir</small>
+                        </summary>
+                        <div class="table-wrapper">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Clase ($X_i$)</th>
+                                        <th>Frec. Absoluta ($f_i$)</th>
+                                        <th>Frec. Relativa ($h_i$)</th>
+                                        <th>Frec. Porcentual ($\%$)</th>
+                                        <th>Acción de Cruce</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tbody-frec-visitante"></tbody>
+                            </table>
+                        </div>
+                    </details>
+                </div>
+            </div>
+
+            <div id="panel-history" class="panel">
+                <div class="history-table-card">
+                    <div class="card-header" style="margin-bottom: 1.5rem;">
+                        <h3>Registros de Consultas en Cloud Firestore</h3>
+                        <p>Historial crudo mapeado desde la colección en producción</p>
+                    </div>
+                    <div class="table-wrapper" style="padding:0; border:none;">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Fecha / Hora</th>
+                                    <th>Rango de Edad</th>
+                                    <th>Procedencia</th>
+                                    <th>Tipo de Visitante</th>
+                                </tr>
+                            </thead>
+                            <tbody id="consultas-tbody"></tbody>
+                        </table>
+                        <div id="consultas-empty" class="empty-state">
+                            <p>Sin registros vinculados</p>
+                            <small>Ejecute la lectura de Firestore o simule variables mockup</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <script type="module" src="./app.js">
+        
+    </script>
+</body>
+</html>

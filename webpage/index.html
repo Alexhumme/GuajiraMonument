@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Francisco El Hombre · Riohacha Cultural</title>
+  <link rel="shortcut icon" href="favicon.svg" type="image/svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-brand">
+    <img class="nav-logo-img" src="logo.png" alt="Riohacha Cultural logo" />
+    <div>
+      <div class="nav-logo">Riohacha Cultural</div>
+      <div class="nav-sub">Patrimonio de La Guajira</div>
+    </div>
+  </div>
+</nav>
+
+<!-- SCREEN 1: FORMULARIO -->
+<section class="screen active" id="screen-form">
+  <div class="form-hero">
+    <div class="wayuu-pattern"></div>
+    <div class="form-badge">
+      <svg width="7" height="7" viewBox="0 0 8 8" fill="currentColor"><circle cx="4" cy="4" r="4"/></svg>
+      Monumento · Riohacha, La Guajira
+    </div>
+    <h1>Francisco<br><em>El Hombre</em></h1>
+    <p class="sub">Completa este formulario breve antes de ver la información del monumento. Tus respuestas son anónimas.</p>
+    <div class="form-divider"></div>
+    <div class="step-bar">
+      <div class="step-wrap"><div class="step-node current" id="sn1">1</div><div class="step-lbl">Edad</div></div>
+      <div class="step-conn" id="sc1"></div>
+      <div class="step-wrap"><div class="step-node pending" id="sn2">2</div><div class="step-lbl">Origen</div></div>
+      <div class="step-conn" id="sc2"></div>
+      <div class="step-wrap"><div class="step-node pending" id="sn3">3</div><div class="step-lbl">Tipo</div></div>
+    </div>
+  </div>
+
+  <div class="form-body">
+    <div class="field-block">
+      <div class="field-label">Rango de edad</div>
+      <div class="opts opts-3" id="grp-edad">
+        <button class="opt" data-group="edad" data-val="Menor de 18" onclick="selOpt(this)">Menor de 18</button>
+        <button class="opt" data-group="edad" data-val="18-25" onclick="selOpt(this)">18 - 25</button>
+        <button class="opt" data-group="edad" data-val="26-35" onclick="selOpt(this)">26 - 35</button>
+        <button class="opt" data-group="edad" data-val="36-45" onclick="selOpt(this)">36 - 45</button>
+        <button class="opt" data-group="edad" data-val="46-60" onclick="selOpt(this)">46 - 60</button>
+        <button class="opt" data-group="edad" data-val="Mayor de 60" onclick="selOpt(this)">Mayor de 60</button>
+      </div>
+    </div>
+
+    <div class="field-block">
+      <div class="field-label">Procedencia</div>
+      <div class="opts opts-2" id="grp-procedencia">
+        <button class="opt" data-group="procedencia" data-val="Riohacha"                      onclick="selOpt(this)">Riohacha</button>
+        <button class="opt" data-group="procedencia" data-val="Otro municipio de La Guajira"  onclick="selOpt(this)">Otro mun. de La Guajira</button>
+        <button class="opt" data-group="procedencia" data-val="Otro departamento de Colombia" onclick="selOpt(this)">Otro dpto. de Colombia</button>
+        <button class="opt" data-group="procedencia" data-val="Extranjero"                    onclick="selOpt(this)">Extranjero</button>
+      </div>
+    </div>
+
+    <div class="field-block">
+      <div class="field-label">Tipo de visitante</div>
+      <div class="opts opts-3" id="grp-tipo">
+        <button class="opt" data-group="tipo" data-val="Turista"      onclick="selOpt(this)">Turista</button>
+        <button class="opt" data-group="tipo" data-val="Residente"    onclick="selOpt(this)">Residente</button>
+        <button class="opt" data-group="tipo" data-val="Estudiante"   onclick="selOpt(this)">Estudiante</button>
+        <button class="opt" data-group="tipo" data-val="Investigador" onclick="selOpt(this)">Investigador</button>
+        <button class="opt" data-group="tipo" data-val="Otro"         onclick="selOpt(this)" style="grid-column:span 2">Otro</button>
+      </div>
+    </div>
+
+    <p class="form-alert" id="form-alert">Selecciona una opción en cada sección para continuar.</p>
+    <div class="submit-container">
+      <button class="form-submit" id="form-submit-btn" onclick="submitForm()">Ver información del monumento →</button>
+      <div class="progress-bar-wrapper" id="progress-wrapper" style="display:none;">
+        <div class="progress-bar" id="progress-bar"></div>
+      </div>
+    </div>
+    <p class="privacy-note">Información anónima · Solo datos estadísticos</p>
+  </div>
+</section>
+
+<!-- SCREEN 2: MONUMENTO -->
+<section class="screen" id="screen-mon">
+  <div class="mon-hero">
+    <img class="mon-hero-img" src="foto2.png" alt="Vista aérea del Monumento Francisco El Hombre en Riohacha" />
+    <div class="mon-hero-overlay"></div>
+    <div class="mon-hero-text">
+      <div class="mon-tag">Patrimonio Cultural · La Guajira</div>
+      <h2>Francisco<br><em>El Hombre</em></h2>
+    </div>
+  </div>
+
+  <div class="mon-meta">
+    <div class="mon-meta-item"><div class="mon-meta-label">Época</div><div class="mon-meta-val">Siglo XIX</div></div>
+    <div class="mon-meta-item"><div class="mon-meta-label">Ubicación</div><div class="mon-meta-val">Riohacha</div></div>
+    <div class="mon-meta-item"><div class="mon-meta-label">Categoría</div><div class="mon-meta-val">Juglar</div></div>
+  </div>
+
+  <div class="mon-content">
+    <div class="sec">
+      <div class="sec-head"><div class="sec-line"></div><div class="sec-lbl">Personaje histórico</div></div>
+      <div class="autor-chip">
+        <div class="autor-av">FH</div>
+        <span>Francisco Moscote Guerra · "Francisco El Hombre"</span>
+      </div>
+    </div>
+
+    <div class="sec">
+      <div class="sec-head"><div class="sec-line"></div><div class="sec-lbl">Reseña histórica</div></div>
+      <p>Francisco Moscote Guerra, conocido como <strong>Francisco El Hombre</strong>, fue un legendario juglar vallenato nacido en el siglo XIX en las tierras de La Guajira. Su nombre se convirtió en leyenda gracias al famoso duelo musical que, según la tradición oral, sostuvo con el propio diablo.</p>
+      <br>
+      <p>La leyenda cuenta que al encontrarse con Satanás en un camino desolado, Francisco lo desafió a un duelo de acordeón y venció tocando el Credo al revés, consagrándose como el más grande músico de la región Caribe.</p>
+    </div>
+
+    <div class="sec">
+      <div class="sec-head"><div class="sec-line"></div><div class="sec-lbl">Significado cultural</div></div>
+      <div class="highlight-card">
+        <p>Francisco El Hombre representa la esencia del vallenato: la tradición oral, el espíritu libre del juglar costeño y la resistencia cultural del Caribe. Su figura es símbolo del folclor que la <strong>UNESCO declaró Patrimonio Cultural Inmaterial de la Humanidad</strong> en 2015.</p>
+      </div>
+    </div>
+
+    <div class="sec">
+      <div class="sec-head"><div class="sec-line"></div><div class="sec-lbl">Importancia para Riohacha y La Guajira</div></div>
+      <p>El legado de Francisco El Hombre es fundamental para la identidad cultural de Riohacha. Su historia inspira el Festival de la Leyenda Vallenata y es referente para músicos, folclorólogos e investigadores que visitan la región.</p>
+    </div>
+
+    <div class="sec">
+      <div class="sec-head"><div class="sec-line"></div><div class="sec-lbl">Línea de tiempo</div></div>
+      <div class="timeline">
+        <div class="tl-item"><div class="tl-dot"></div><div class="tl-year">Siglo XIX</div><div class="tl-text">Nace Francisco Moscote Guerra en La Guajira. Desde joven demuestra un talento excepcional para el acordeón.</div></div>
+        <div class="tl-item"><div class="tl-dot"></div><div class="tl-year">Finales del siglo XIX</div><div class="tl-text">Ocurre el legendario duelo con el diablo, episodio que lo consagra como el juglar más importante del Caribe colombiano.</div></div>
+        <div class="tl-item"><div class="tl-dot"></div><div class="tl-year">Siglo XX</div><div class="tl-text">Gabriel García Márquez lo inmortaliza en sus obras, llevando su mito al mundo entero.</div></div>
+        <div class="tl-item"><div class="tl-dot"></div><div class="tl-year">2015</div><div class="tl-text">La UNESCO declara el vallenato Patrimonio Cultural Inmaterial de la Humanidad.</div></div>
+      </div>
+    </div>
+
+    <div class="sec">
+      <div class="sec-head"><div class="sec-line"></div><div class="sec-lbl">Galería fotográfica</div></div>
+      <div class="gallery">
+        <img class="gal-img" src="foto2.png" alt="Vista aérea del monumento" />
+        <img class="gal-img" src="foto3.png" alt="Vista frontal del monumento" />
+      </div>
+    </div>
+
+    <div class="sec">
+      <div class="sec-head"><div class="sec-line"></div><div class="sec-lbl">Ubicación</div></div>
+      <a class="map-link" href="https://www.google.com/maps/search/?api=1&query=Monumento+Francisco+El+Hombre+Riohacha" target="_blank" rel="noopener">Ver ubicación en Google Maps</a>
+    </div>
+
+    <div class="mon-footer">
+      <p class="footer-text">Información cultural con fines turísticos y estadísticos.<br>Universidad de La Guajira · Estadística I · 2026</p>
+      <button class="back-btn" onclick="goBack()">← Volver al inicio</button>
+    </div>
+  </div>
+</section>
+<script type="module" src="./app.js"></script>
+</body>
+</html>
