@@ -25,6 +25,8 @@ let chartProcedenciaInstance = null;
 let chartEdadInstance = null;
 let chartComparisonInstance = null;
 
+const SIDEBAR_COLLAPSED_KEY = "dashboardSidebarCollapsed";
+
 /******************************************************************
  * CONSTANTES
  ******************************************************************/
@@ -577,10 +579,42 @@ window.showPanel = function (name, btn) {
   btn.classList.add("active");
 };
 
+function initSidebarToggle() {
+  const toggleButton = document.getElementById("sidebar-toggle");
+  if (!toggleButton) return;
+
+  const savedState = localStorage.getItem(SIDEBAR_COLLAPSED_KEY);
+  const shouldCollapse = savedState === "true";
+
+  setSidebarCollapsed(shouldCollapse);
+
+  toggleButton.addEventListener("click", () => {
+    const isCollapsed = document.body.classList.toggle("sidebar-collapsed");
+    localStorage.setItem(SIDEBAR_COLLAPSED_KEY, String(isCollapsed));
+    updateSidebarToggle(isCollapsed);
+  });
+}
+
+function setSidebarCollapsed(isCollapsed) {
+  document.body.classList.toggle("sidebar-collapsed", isCollapsed);
+  updateSidebarToggle(isCollapsed);
+}
+
+function updateSidebarToggle(isCollapsed) {
+  const toggleButton = document.getElementById("sidebar-toggle");
+  if (!toggleButton) return;
+
+  const label = isCollapsed ? "Expandir barra lateral" : "Comprimir barra lateral";
+  toggleButton.setAttribute("aria-label", label);
+  toggleButton.setAttribute("aria-expanded", String(!isCollapsed));
+  toggleButton.setAttribute("title", label);
+}
+
 /******************************************************************
  * INICIO
  ******************************************************************/
 
 window.onload = () => {
+  initSidebarToggle();
   initFirestoreListener();
 };

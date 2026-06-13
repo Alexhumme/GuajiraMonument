@@ -15,19 +15,34 @@
 
     <aside class="sidebar">
         <div class="brand-wrapper">
-            <div class="brand">
-                <h1>Uniguajira BI</h1>
+            <div class="sidebar-header">
+                <div class="brand">
+                    <h1>Uniguajira BI</h1>
+                    <span class="brand-mark">BI</span>
+                </div>
+                <button
+                    id="sidebar-toggle"
+                    class="sidebar-toggle"
+                    type="button"
+                    aria-label="Comprimir barra lateral"
+                    aria-expanded="true"
+                    title="Comprimir barra lateral"
+                >
+                    <span aria-hidden="true">&lsaquo;</span>
+                </button>
             </div>
             <nav>
                 <ul class="nav-list">
                     <li>
                         <button class="nav-link active" onclick="showPanel('analytics', this)">
-                            Panel Analítico
+                            <span class="nav-short" aria-hidden="true">PA</span>
+                            <span class="nav-label">Panel Analítico</span>
                         </button>
                     </li>
                     <li>
                         <button class="nav-link" onclick="showPanel('history', this)">
-                            Datos Históricos
+                            <span class="nav-short" aria-hidden="true">DH</span>
+                            <span class="nav-label">Datos Históricos</span>
                         </button>
                     </li>
                 </ul>
