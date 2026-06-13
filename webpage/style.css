@@ -452,7 +452,7 @@ button {
 
 .mon-meta {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   background: var(--brown);
 }
 .mon-meta-item {
@@ -508,6 +508,125 @@ button {
   font-size: 14px;
   line-height: 1.85;
   color: var(--text-muted);
+}
+
+.monument-intro {
+  background: linear-gradient(135deg, var(--card), rgba(184, 92, 56, 0.08));
+  border: 1px solid var(--terra-border);
+  border-radius: var(--radius-lg);
+  padding: 1.25rem 1.35rem;
+  margin-bottom: 1rem;
+}
+
+.monument-intro p {
+  color: var(--text);
+}
+
+.info-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.info-card {
+  min-height: 96px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.info-card span,
+.credits-list span,
+.spec-main span,
+.spec-list span {
+  font-size: 9px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--text-faint);
+  font-weight: 500;
+}
+
+.info-card strong,
+.credits-list strong,
+.spec-main strong,
+.spec-list strong {
+  color: var(--text);
+  font-size: 14px;
+  line-height: 1.45;
+  font-weight: 500;
+}
+
+.spec-panel {
+  display: grid;
+  grid-template-columns: 1.1fr 1fr;
+  gap: 12px;
+  background: var(--brown);
+  color: #f5c896;
+  border-radius: var(--radius-lg);
+  padding: 1rem;
+}
+
+.spec-main {
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius);
+  padding: 1rem;
+}
+
+.spec-main span,
+.spec-list span {
+  color: rgba(255, 220, 170, 0.62);
+}
+
+.spec-main strong,
+.spec-list strong {
+  display: block;
+  margin-top: 6px;
+  color: #f5c896;
+}
+
+.spec-main p {
+  margin-top: 0.9rem;
+  color: rgba(255, 245, 230, 0.78);
+  font-size: 13px;
+  line-height: 1.65;
+}
+
+.spec-list {
+  display: grid;
+  gap: 8px;
+}
+
+.spec-list div {
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius);
+  padding: 0.85rem;
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.credits-list {
+  display: grid;
+  gap: 8px;
+}
+
+.credits-list div {
+  display: grid;
+  grid-template-columns: 1fr 1.25fr;
+  gap: 12px;
+  align-items: center;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 0.9rem 1rem;
+}
+
+.location-copy {
+  margin-bottom: 0.85rem;
 }
 
 .highlight-card {
@@ -683,10 +802,36 @@ button {
   .opts-3 {
     grid-template-columns: 1fr 1fr;
   }
+  .info-grid,
+  .spec-panel,
+  .credits-list div {
+    grid-template-columns: 1fr;
+  }
+  .mon-meta {
+    grid-template-columns: 1fr;
+  }
+  .mon-meta-item {
+    border-right: none;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
+  .mon-meta-item:last-child {
+    border-bottom: none;
+  }
   .mon-hero {
     height: 280px;
   }
   .gallery {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 720px) and (min-width: 481px) {
+  .mon-meta,
+  .info-grid,
+  .spec-panel {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .credits-list div {
     grid-template-columns: 1fr;
   }
 }
