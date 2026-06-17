@@ -13,6 +13,7 @@
 </head>
 <body>
 
+    <!-- Barra lateral de navegación y marca del dashboard -->
     <aside class="sidebar">
         <div class="brand-wrapper">
             <div class="sidebar-header">
@@ -55,6 +56,7 @@
         </div>
     </aside>
 
+    <!-- Contenedor principal con la cabecera y el contenido por panel -->
     <main class="main-content">
         <header class="top-bar">
             <div>
@@ -74,6 +76,7 @@
 
         <div class="content-body">
             
+            <!-- Panel principal de análisis con KPI, gráficas y tablas de frecuencia -->
             <div id="panel-analytics" class="panel active">
                 <div class="kpi-grid">
                     <div class="kpi-card">
@@ -214,6 +217,7 @@
                 </div>
             </div>
 
+            <!-- Panel secundario que muestra el historial crudo de consultas guardadas en Firestore -->
             <div id="panel-history" class="panel">
                 <div class="history-table-card">
                     <div class="card-header" style="margin-bottom: 1.5rem;">
@@ -243,8 +247,10 @@
         </div>
     </main>
 
+    <!-- Contenedor para mostrar notificaciones breves al usuario -->
     <div id="toast-container" class="toast-container" aria-live="polite" aria-atomic="true"></div>
 
+    <!-- Carga el módulo principal de JavaScript que controla la lógica del dashboard -->
     <script type="module" src="./app.js"></script>
 </body>
 </html>

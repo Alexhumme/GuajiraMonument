@@ -1,32 +1,51 @@
 import { db } from './firebase.js';
 import { addDoc, collection } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-firestore.js";
 
+// Estado global de selección del formulario.
+// Las claves reflejan los grupos de opciones que debe completar el usuario.
 export var sel = { edad: null, procedencia: null, tipo: null };
 
+// Marca una opción seleccionada dentro de su grupo y actualiza el progreso.
 export function selOpt(btn) {
   var g = btn.getAttribute("data-group");
   var btns = document.querySelectorAll('[data-group="' + g + '"]');
+
+  // Limpiar la selección previa dentro del mismo grupo.
   for (var i = 0; i < btns.length; i++) btns[i].classList.remove("sel");
+
+  // Marcar el botón actual como seleccionado y almacenar el valor.
   btn.classList.add("sel");
   sel[g] = btn.getAttribute("data-val");
+
+  // Ocultar cualquier alerta previa de validación.
   var alert = document.getElementById("form-alert");
   if (alert) alert.style.display = "none";
+
+  // Actualizar la visualización de los pasos completados.
   updateSteps();
 }
 
+// Actualiza el estado visual de los pasos del formulario.
+// Muestra los pasos completados y el siguiente paso por llenar.
 export function updateSteps() {
   var groups = [
     { key: "edad", node: "sn1", conn: "sc1", next: "sn2" },
     { key: "procedencia", node: "sn2", conn: "sc2", next: "sn3" },
     { key: "tipo", node: "sn3", conn: null, next: null },
   ];
+
   for (var i = 0; i < groups.length; i++) {
     var g = groups[i];
     var node = document.getElementById(g.node);
+
+    // Si el usuario ya seleccionó un valor para el grupo, marcar el paso como hecho.
     if (sel[g.key]) {
       node.className = "step-node done";
       node.textContent = "✓";
+
       if (g.conn) document.getElementById(g.conn).classList.add("done");
+
+      // El siguiente paso se marca como actual si aún no está completado.
       if (g.next) {
         var nextNode = document.getElementById(g.next);
         if (!nextNode.classList.contains("done"))
@@ -36,10 +55,13 @@ export function updateSteps() {
   }
 }
 
+// Envía el formulario a Firestore después de validar que todos los campos estén completos.
 export async function submitForm() {
   if (!sel.edad || !sel.procedencia || !sel.tipo) {
     var alert = document.getElementById("form-alert");
     if (alert) alert.style.display = "block";
+
+    // Resaltar visualmente los grupos incompletos.
     var groups = ["edad", "procedencia", "tipo"];
     for (var i = 0; i < groups.length; i++) {
       if (!sel[groups[i]]) {
@@ -48,6 +70,8 @@ export async function submitForm() {
         c.style.borderRadius = "12px";
         c.style.padding = "6px";
         c.style.background = "rgba(200,60,60,0.05)";
+
+        // Quitar el estilo temporal después de un breve tiempo.
         (function (el) {
           setTimeout(function () {
             el.style.outline = "";
@@ -60,13 +84,14 @@ export async function submitForm() {
     return;
   }
 
-  // Mostrar barra de progreso
+  // Cambiar a la vista de progreso mientras se guarda el registro.
   var submitBtn = document.getElementById("form-submit-btn");
   var progressWrapper = document.getElementById("progress-wrapper");
   submitBtn.style.display = "none";
   progressWrapper.style.display = "block";
   submitBtn.disabled = true;
 
+  // Construir el objeto de consulta que se guardará en Firestore.
   var now = new Date();
   var consulta = {
     edad: sel.edad,
@@ -84,7 +109,8 @@ export async function submitForm() {
     console.log("Consulta guardada en Firestore con ID:", docRef.id);
   } catch (error) {
     console.error("Error al guardar consulta:", error);
-    // Ocultar barra y mostrar botón de nuevo si hay error
+
+    // Si ocurre un error, restaurar el botón de envío y notificar al usuario.
     progressWrapper.style.display = "none";
     submitBtn.style.display = "block";
     submitBtn.disabled = false;
@@ -92,11 +118,13 @@ export async function submitForm() {
     return;
   }
 
+  // Navegar a la pantalla de confirmación / monitoreo tras el envío exitoso.
   document.getElementById("screen-form").classList.remove("active");
   document.getElementById("screen-mon").classList.add("active");
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
+// Regresa del estado de confirmación al formulario para permitir editar la selección.
 export function goBack() {
   document.getElementById("screen-mon").classList.remove("active");
   document.getElementById("screen-form").classList.add("active");

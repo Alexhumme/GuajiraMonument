@@ -15,6 +15,12 @@ import {
  * ESTADO GLOBAL
  ******************************************************************/
 
+// Variables compartidas por toda la aplicación.
+// rawDataGlobal almacena los documentos recibidos de Firestore.
+// isInitialSnapshot evita mostrar notificaciones durante la carga inicial.
+// currentFilterField y currentFilterValue guardan el filtro activo.
+// Las instancias de chart* se usan para destruir las gráficas previas antes de pintar nuevas.
+
 let rawDataGlobal = [];
 let isInitialSnapshot = true;
 
@@ -31,8 +37,11 @@ const SIDEBAR_COLLAPSED_KEY = "dashboardSidebarCollapsed";
  * CONSTANTES
  ******************************************************************/
 
+// Identificador del monumento cuyo historial y métricas se consultan.
 const MONUMENTO_ID = "francisco_el_hombre";
 
+// Valores posibles para las variables de interés.
+// Se usan tanto para construir tablas como para ordenar y filtrar resultados.
 const CATEGORIAS_EDAD = [
   "Menor de 18",
   "18-25",
@@ -57,6 +66,8 @@ const CATEGORIAS_VISITANTE = [
   "Otro",
 ];
 
+// Mapa de variables que permite construir la gráfica de comparación
+// usando metadatos como etiquetas y categorías válidas.
 const VARIABLE_MAP = {
   edad: {
     label: "Rango de Edad",
@@ -72,6 +83,7 @@ const VARIABLE_MAP = {
   },
 };
 
+// Paleta de colores usada para las barras de la gráfica de comparación.
 const COMPARISON_COLORS = [
   "#8B5E34",
   "#BF8754",
@@ -85,12 +97,16 @@ const COMPARISON_COLORS = [
  * FIRESTORE
  ******************************************************************/
 
+// Inicializa la escucha en tiempo real de Firestore para el conjunto de
+// documentos de consultas asociadas al monumento configurado.
 function initFirestoreListener() {
   const consultasRef = collection(db, "consultas");
 
+  // Solo traer los documentos que correspondan al monumento actual.
   const q = query(consultasRef, where("monumentoId", "==", MONUMENTO_ID));
 
   onSnapshot(q, (snapshot) => {
+    // Evitar notificaciones al cargar los datos inicialmente.
     if (!isInitialSnapshot) {
       const addedDocs = snapshot.docChanges().filter((change) => change.type === "added");
       if (addedDocs.length > 0) {
@@ -101,6 +117,7 @@ function initFirestoreListener() {
       }
     }
 
+    // Guardar los datos de la colección en el estado global y formatear las fechas.
     rawDataGlobal = snapshot.docs.map((doc) => {
       const data = doc.data();
 
@@ -113,6 +130,7 @@ function initFirestoreListener() {
       };
     });
 
+    // Recalcular y renderizar todas las vistas cuando cambian los datos.
     processAndRender();
     isInitialSnapshot = false;
   });
@@ -170,14 +188,16 @@ function formatTimestamp(timestamp) {
  * FILTROS
  ******************************************************************/
 
+// Funciones expuestas globalmente para aplicar y limpiar el filtro desde la UI.
 window.setInteractiveFilter = function (field, value) {
   currentFilterField = field;
   currentFilterValue = value;
 
+  // Mostrar etiqueta con el filtro activo.
   document.getElementById("filter-current-value").innerText = value;
-
   document.getElementById("active-filter-tag").style.display = "flex";
 
+  // Re-renderizar con los datos filtrados.
   processAndRender();
 };
 
@@ -187,6 +207,7 @@ window.clearCurrentFilter = function () {
 
   document.getElementById("active-filter-tag").style.display = "none";
 
+  // Volver a la vista completa sin filtros.
   processAndRender();
 };
 
@@ -194,6 +215,8 @@ window.clearCurrentFilter = function () {
  * PIPELINE PRINCIPAL
  ******************************************************************/
 
+// Orquesta el flujo de procesamiento de datos antes de renderizar la UI.
+// Aplica filtros, calcula métricas y actualiza todas las vistas en conjunto.
 function processAndRender() {
   let filteredData = [...rawDataGlobal];
 
@@ -334,6 +357,8 @@ function buildSingleTable(field, categorias, data, tbodyId) {
  * GRÁFICAS
  ******************************************************************/
 
+// Construye las gráficas de frecuencia para procedencia y edad.
+// Usa Chart.js y destruye las instancias previas para evitar fugas de memoria.
 function renderCharts(data) {
   const countsProc = {};
   CATEGORIAS_PROCEDENCIA.forEach((c) => (countsProc[c] = 0));
@@ -432,10 +457,13 @@ function renderCharts(data) {
  * COMPARACIÓN DE VARIABLES
  ******************************************************************/
 
+// Actualiza la gráfica de comparación cuando el usuario cambia las variables.
 window.onCompareChange = function () {
   renderComparisonChart(rawDataGlobal);
 };
 
+// Construye una tabla de contingencia entre dos variables seleccionadas
+// para comparar cómo se distribuyen los valores entre sí.
 function renderComparisonChart(data) {
   const xField = document.getElementById("compare-x").value;
   const yField = document.getElementById("compare-y").value;
@@ -444,6 +472,7 @@ function renderComparisonChart(data) {
   const yMeta = VARIABLE_MAP[yField];
   const counts = {};
 
+  // Inicializa la estructura de conteo para todas las combinaciones posibles.
   xMeta.categories.forEach((xValue) => {
     counts[xValue] = {};
     yMeta.categories.forEach((yValue) => {
@@ -459,6 +488,7 @@ function renderComparisonChart(data) {
     );
   }
 
+  // Contar cuántos registros caen en cada combinación de categorías.
   filtered.forEach((item) => {
     const xValue = item[xField];
     const yValue = item[yField];
@@ -526,6 +556,8 @@ function renderComparisonChart(data) {
  * HISTORIAL DE CONSULTAS
  ******************************************************************/
 
+// Renderiza la tabla con el historial de registros recibidos.
+// Muestra un estado vacío si no hay datos disponibles.
 function renderHistoryTable(data) {
   const tbody = document.getElementById("consultas-tbody");
 
@@ -565,6 +597,7 @@ function renderHistoryTable(data) {
  * NAVEGACIÓN DE PANELES
  ******************************************************************/
 
+// Muestra el panel seleccionado y actualiza el estado de los botones.
 window.showPanel = function (name, btn) {
   document
     .querySelectorAll(".panel")
@@ -579,6 +612,8 @@ window.showPanel = function (name, btn) {
   btn.classList.add("active");
 };
 
+// Inicializa el botón para colapsar/expandir la barra lateral.
+// Guarda el estado en localStorage para restaurarlo en futuras visitas.
 function initSidebarToggle() {
   const toggleButton = document.getElementById("sidebar-toggle");
   if (!toggleButton) return;

@@ -12,6 +12,7 @@
 </head>
 <body>
 
+<!-- Navegación superior fija con marca e identidad del proyecto -->
 <nav class="nav">
   <div class="nav-brand">
     <img class="nav-logo-img" src="logo.png" alt="Riohacha Cultural logo" />
@@ -23,6 +24,7 @@
 </nav>
 
 <!-- SCREEN 1: FORMULARIO -->
+<!-- Pantalla inicial donde el visitante selecciona rango de edad, procedencia y tipo de visitante. -->
 <section class="screen active" id="screen-form">
   <div class="form-hero">
     <div class="wayuu-pattern"></div>
@@ -43,6 +45,7 @@
   </div>
 
   <div class="form-body">
+    <!-- Bloque de preguntas del formulario: cada sección usa botones que llaman a selOpt() para actualizar el estado. -->
     <div class="field-block">
       <div class="field-label">Rango de edad</div>
       <div class="opts opts-3" id="grp-edad">
@@ -77,6 +80,7 @@
     </div>
 
     <p class="form-alert" id="form-alert">Selecciona una opción en cada sección para continuar.</p>
+    <!-- Botón de envío que valida el formulario y guarda los datos en Firestore mediante submitForm(). -->
     <div class="submit-container">
       <button class="form-submit" id="form-submit-btn" onclick="submitForm()">Ver información del monumento →</button>
       <div class="progress-bar-wrapper" id="progress-wrapper" style="display:none;">
@@ -88,6 +92,7 @@
 </section>
 
 <!-- SCREEN 2: MONUMENTO -->
+<!-- Segunda pantalla que se muestra tras enviar el formulario correctamente. Contiene información cultural del monumento. -->
 <section class="screen" id="screen-mon">
   <div class="mon-hero">
     <img class="mon-hero-img" src="foto2.png" alt="Vista aérea del Monumento Francisco El Hombre en Riohacha" />
@@ -181,15 +186,17 @@
     <div class="sec">
       <div class="sec-head"><div class="sec-line"></div><div class="sec-lbl">Ubicación</div></div>
       <p class="location-copy">El monumento se encuentra en la glorieta de la carrera 7 con calle 15, un punto de referencia urbano dentro de Riohacha.</p>
-      <a class="map-link" href="https://www.google.com/maps/search/?api=1&query=Glorieta+carrera+7+calle+15+Riohacha+Monumento+Francisco+El+Hombre" target="_blank" rel="noopener">Ver ubicación en Google Maps</a>
+      <a class="map-link" href="https://maps.app.goo.gl/7SDRLPnHg3jEqCvn6" target="_blank" rel="noopener">Ver ubicación en Google Maps</a>
     </div>
 
     <div class="mon-footer">
       <p class="footer-text">Información cultural con fines turísticos y estadísticos.<br>Universidad de La Guajira · Estadística I · 2026</p>
+      <!-- Botón para volver a la pantalla del formulario usando la función goBack(). -->
       <button class="back-btn" onclick="goBack()">← Volver al inicio</button>
     </div>
   </div>
 </section>
+<!-- Carga el script de la aplicación que controla la lógica del formulario y la navegación de pantallas. -->
 <script type="module" src="./app.js"></script>
 </body>
 </html>
